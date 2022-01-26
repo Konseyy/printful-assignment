@@ -1,42 +1,35 @@
 <template>
-  <template v-if="view === 'Home'">
-    <HomeView />
-  </template>
-  <template v-if="view === 'Question'">
-    <QuestionView />
-  </template>
-  <template v-if="view === 'Results'">
-    <ResultsView />
-  </template>
+   <component :is="Page" />
 </template>
 
 <script>
-import HomeView from "./components/HomeView.vue";
-import QuestionView from "./components/QuestionView.vue";
-import ResultsView from "./components/ResultsView.vue";
+import HomeView from './components/HomeView.vue';
+import QuestionView from './components/QuestionView.vue';
+import NotFound from './components/NotFound.vue';
+import { ref } from '@vue/reactivity';
 
 export default {
-  name: "App",
-  components: {
-    HomeView,
-    QuestionView,
-    ResultsView,
-  },
-  data() {
-    return {
-      view: "Home",
-    };
-  },
+   name: 'App',
+   setup() {
+      const routes = {
+         '/': HomeView,
+         '/quiz': QuestionView,
+      };
+      const path = ref(window.location.pathname);
+      return {
+         Page: routes[path.value] || NotFound,
+      };
+   },
 };
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+   font-family: Avenir, Helvetica, Arial, sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   text-align: center;
+   color: #2c3e50;
+   margin-top: 60px;
 }
 </style>
