@@ -1,17 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <template v-if="view === 'Home'">
+    <HomeView />
+  </template>
+  <template v-if="view === 'Question'">
+    <QuestionView />
+  </template>
+  <template v-if="view === 'Results'">
+    <ResultsView />
+  </template>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HomeView from "./components/HomeView.vue";
+import QuestionView from "./components/QuestionView.vue";
+import ResultsView from "./components/ResultsView.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    HomeView,
+    QuestionView,
+    ResultsView,
+  },
+  data() {
+    return {
+      view: "Home",
+    };
+  },
+};
 </script>
 
 <style>
