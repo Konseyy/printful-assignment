@@ -1,21 +1,37 @@
 <template>
-   <div class="page">
+   <div class="page" @click="selectionExpanded = false">
       <div class="container">
-         <h1>Technical Task</h1>
-         <input v-model="selectedName" placeholder="Enter your name" type="text" />
-         <select v-model="selectedId" name="cars" id="cars">
-            <option v-for="item in quizes" :key="item.id" :value="item.id">
-               {{ item.title }}
-            </option>
-         </select>
-         <button @click="startQuiz()">Start</button>
+         <h1 class="heading">Technical Task</h1>
+         <input class="nameInput" v-model="selectedName" placeholder="Enter your name" type="text" />
+         <div class="selector" :class="{ expanded: selectionExpanded }">
+            <div class="selectedOption" @click.stop="selectionExpanded = !selectionExpanded">
+               <p v-if="selectedOption">{{ selectedOption.title }}</p>
+            </div>
+            <div class="listContainer">
+               <ul class="selectContainer">
+                  <li
+                     @click.stop="
+                        selectionExpanded = !selectionExpanded;
+                        selectedId = item.id;
+                     "
+                     v-for="item in selectOptions"
+                     :key="item.id"
+                     class="selectOption"
+                  >
+                     {{ item.title }}
+                  </li>
+               </ul>
+            </div>
+         </div>
+
+         <button class="startButton" @click="startQuiz()">Start</button>
          <span class="error" v-if="errorMsg">{{ errorMsg }}</span>
       </div>
    </div>
 </template>
 
 <script>
-import { onMounted, ref } from '@vue/runtime-core';
+import { computed, onMounted, ref } from '@vue/runtime-core';
 import { useRouter } from 'vue-router';
 export default {
    name: 'Home',
@@ -25,6 +41,7 @@ export default {
       const selectedId = ref(-1);
       const selectedName = ref('');
       const errorMsg = ref('');
+      const selectionExpanded = ref(false);
       const startQuiz = () => {
          const id = selectedId.value;
          const name = selectedName.value;
@@ -38,6 +55,12 @@ export default {
          }
          router.push({ name: 'Quiz', params: { id, name } });
       };
+      const selectOptions = computed(() => {
+         return quizes.value.filter((quiz) => quiz.id !== selectedId.value);
+      });
+      const selectedOption = computed(() => {
+         return quizes.value.filter((quiz) => quiz.id === selectedId.value)[0];
+      });
       onMounted(async () => {
          try {
             const res = await fetch('https://printful.com/test-quiz.php?action=quizzes');
@@ -55,6 +78,9 @@ export default {
          selectedId,
          selectedName,
          startQuiz,
+         selectOptions,
+         selectedOption,
+         selectionExpanded,
          errorMsg,
       };
    },
@@ -64,16 +90,139 @@ export default {
 <style scoped>
 .page {
    display: flex;
-   align-items: center;
    justify-content: center;
+   min-height: 100vh;
+   color: black;
+}
+* {
+   box-sizing: border-box;
+}
+.error {
+   color: red;
+   margin-top: 1rem;
+   font-size: 1.3rem;
 }
 .container {
    display: flex;
    flex-direction: column;
+   align-items: center;
+   width: max(35vw, 300px);
 }
-.error{
-	color:red;
-	margin-top: 1rem;
-	font-weight: bold;
+.heading {
+   font-size: 3.5rem;
+}
+input {
+   outline: none;
+}
+.nameInput,
+.selectedOption,
+.startButton {
+   height: 3.5rem;
+   text-align: center;
+   font-size: 1.6rem;
+   border-radius: 10px;
+   box-shadow: -1px 1px 3px 1px black;
+}
+.nameInput {
+   padding: 0;
+   width: 100%;
+   border: 1px solid black;
+   margin-bottom: 1rem;
+   background-color: white;
+   transition: background-color 0.2s;
+}
+.nameInput:hover,
+.nameInput:focus {
+   background-color: rgb(243, 243, 243);
+}
+.selector {
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   margin-bottom: 1.2rem;
+}
+.listContainer {
+   position: relative;
+   display: flex;
+   justify-content: center;
+}
+.selectContainer {
+   box-shadow: -1px 1px 3px 1px black;
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   position: absolute;
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   transform: scaleY(0);
+   transform-origin: top;
+   background-color: white;
+   border: 1px solid black;
+   border-top: none;
+   background-color: white;
+   border-bottom-right-radius: 10px;
+   border-bottom-left-radius: 10px;
+   opacity: 0;
+   transition: transform 0.25s;
+}
+.expanded .selectContainer {
+   opacity: 1;
+   transform: scaleY(1);
+}
+.selectedOption {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 100%;
+   border-radius: 10px;
+   border: 1px solid black;
+   transition: background-color 0.2s;
+}
+.selectedOption:hover,
+.expanded .selectedOption {
+   background-color: rgb(241, 241, 241);
+}
+.expanded .selectedOption {
+   border-bottom-right-radius: 0;
+   border-bottom-left-radius: 0;
+}
+.selectedOption p {
+   margin: 0;
+   font-size: 1.6rem;
+}
+.selectedOption:hover {
+   cursor: pointer;
+}
+.selectOption {
+   font-size: 1.6rem;
+   padding-bottom: 0.7rem;
+   padding-top: 0.7rem;
+   border-bottom: 1px solid black;
+   transition: background-color 0.2s;
+}
+.selectOption:last-of-type {
+   border-bottom: none;
+   border-bottom-right-radius: 10px;
+   border-bottom-left-radius: 10px;
+}
+.selectOption:hover {
+   cursor: pointer;
+   background-color: rgb(241, 241, 241);
+}
+.startButton {
+   width: max(30%, 140px);
+   border: 1px solid black;
+   background-color: transparent;
+   transition: background-color 0.25s, color 0.25s;
+}
+.startButton:hover {
+   cursor: pointer;
+   background-color: blue;
+   color: white;
+}
+.startButton:active {
+   background-color: rgb(0, 0, 160);
+   transition: background-color 0.15s, color 0.25s;
 }
 </style>
