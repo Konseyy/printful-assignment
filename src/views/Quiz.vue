@@ -53,7 +53,7 @@ export default {
 
       const fetchQuiz = async (id) => {
          try {
-            const url = process.env.VUE_APP_USE_LOCAL_SERVER
+            const url = process.env.VUE_APP_USE_LOCAL_SERVER===true
                ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/questions?quizId=${id}`
                : `https://printful.com/test-quiz.php?action=questions&quizId=${id}`;
             const res = await fetch(url);
@@ -66,7 +66,7 @@ export default {
       const fetchAnswers = async (quizId, questionId) => {
          if (!quizId || !questionId) return;
          try {
-            const url = process.env.VUE_APP_USE_LOCAL_SERVER
+            const url = process.env.VUE_APP_USE_LOCAL_SERVER===true
                ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/answers?questionId=${questionId}`
                : `https://printful.com/test-quiz.php?action=answers&quizId=${quizId}&questionId=${questionId}`;
             const res = await fetch(url);
@@ -83,7 +83,7 @@ export default {
       });
       const completeQuiz = async () => {
          try {
-            let url = process.env.VUE_APP_USE_LOCAL_SERVER
+            let url = process.env.VUE_APP_USE_LOCAL_SERVER===true
                ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/check?quizId=${id}`
                : `https://printful.com/test-quiz.php?action=submit&quizId=${id}`;
             chosenAnswers.forEach((answer) => {
