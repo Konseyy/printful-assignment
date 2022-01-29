@@ -59,6 +59,9 @@ app.get("/check", (req, res) => {
 		res.json({ error: "Please specify answers" });
 		return;
 	}
+	if (!Array.isArray(answers)) {
+		res.json({ error: "Answers must be array" });
+	}
 	const correct_answers_arr = data.correct_answers.filter(c => c.quiz == quizId);
 	const correct_answers = correct_answers_arr[0] ?? undefined;
 	const questions = data.questions.filter(q => q.quiz == quizId).length;
