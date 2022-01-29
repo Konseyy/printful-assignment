@@ -7,7 +7,7 @@
             <div
                class="selectedOption"
                @click.stop="
-                  if (!loading) {
+                  if (!loading && selectOptions.length > 1) {
                      selectionExpanded = !selectionExpanded;
                   }
                "
@@ -72,7 +72,10 @@ export default {
       });
       onMounted(async () => {
          try {
-            const res = await fetch('https://printful.com/test-quiz.php?action=quizzes');
+            const url = process.env.VUE_APP_USE_LOCAL_SERVER
+               ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/quizes`
+               : 'https://printful.com/test-quiz.php?action=quizzes';
+            const res = await fetch(url);
             const r = await res.json();
             if (!r || !r[0] || !r[0].id) return;
             selectedId.value = r[0].id;

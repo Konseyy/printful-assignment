@@ -53,7 +53,10 @@ export default {
 
       const fetchQuiz = async (id) => {
          try {
-            const res = await fetch(`https://printful.com/test-quiz.php?action=questions&quizId=${id}`);
+            const url = process.env.VUE_APP_USE_LOCAL_SERVER
+               ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/questions?quizId=${id}`
+               : `https://printful.com/test-quiz.php?action=questions&quizId=${id}`;
+            const res = await fetch(url);
             const r = await res.json();
             return r;
          } catch (e) {
@@ -63,7 +66,10 @@ export default {
       const fetchAnswers = async (quizId, questionId) => {
          if (!quizId || !questionId) return;
          try {
-            const res = await fetch(`https://printful.com/test-quiz.php?action=answers&quizId=${quizId}&questionId=${questionId}`);
+            const url = process.env.VUE_APP_USE_LOCAL_SERVER
+               ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/answers?questionId=${questionId}`
+               : `https://printful.com/test-quiz.php?action=answers&quizId=${quizId}&questionId=${questionId}`;
+            const res = await fetch(url);
             const r = await res.json();
             return r;
          } catch (e) {
@@ -77,7 +83,9 @@ export default {
       });
       const completeQuiz = async () => {
          try {
-            let url = `https://printful.com/test-quiz.php?action=submit&quizId=${id}`;
+            let url = process.env.VUE_APP_USE_LOCAL_SERVER
+               ? `http://localhost:${process.env.VUE_APP_SERVER_PORT}/check?quizId=${id}`
+               : `https://printful.com/test-quiz.php?action=submit&quizId=${id}`;
             chosenAnswers.forEach((answer) => {
                url += `&answers[]=${answer}`;
             });
