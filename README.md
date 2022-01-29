@@ -4,7 +4,7 @@
 [Live demo](https://www.quiz.valdis.me/) is available
 
 ## Description
-A project made with [Vue.js](https://vuejs.org/) frontend and optional [Express](https://expressjs.com/) backend
+A project made with a [Vue.js](https://vuejs.org/) frontend and optional [Express](https://expressjs.com/) backend
 <br>
 This webapp fetches data about quizes, questions and checks answers using either a public REST API or calls to a locally running Express.js server
 <br>
