@@ -7,7 +7,7 @@
             <div
                class="selectedOption"
                @click.stop="
-                  if (!loading && selectOptions.length > 1) {
+                  if (!loading && selectOptions.length < 2) {
                      selectionExpanded = !selectionExpanded;
                   }
                "
