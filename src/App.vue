@@ -1,7 +1,5 @@
 <template>
-   <transition name="slide-right">
-      <router-view />
-   </transition>
+   <router-view />
 </template>
 
 <style>
