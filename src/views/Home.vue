@@ -4,8 +4,16 @@
          <h1 class="heading">Technical Task</h1>
          <input class="nameInput" v-model="selectedName" placeholder="Enter your name" type="text" />
          <div class="selector" :class="{ expanded: selectionExpanded }">
-            <div class="selectedOption" @click.stop="selectionExpanded = !selectionExpanded">
+            <div
+               class="selectedOption"
+               @click.stop="
+                  if (!loading) {
+                     selectionExpanded = !selectionExpanded;
+                  }
+               "
+            >
                <p v-if="selectedOption">{{ selectedOption.title }}</p>
+               <img class="loader" v-if="loading" src="../../public/loader.png" />
             </div>
             <div class="listContainer">
                <ul class="selectContainer">
@@ -42,6 +50,7 @@ export default {
       const selectedName = ref('');
       const errorMsg = ref('');
       const selectionExpanded = ref(false);
+      const loading = ref(true);
       const startQuiz = () => {
          const id = selectedId.value;
          const name = selectedName.value;
@@ -65,13 +74,13 @@ export default {
          try {
             const res = await fetch('https://printful.com/test-quiz.php?action=quizzes');
             const r = await res.json();
-            console.log('results from quizes api', r);
             if (!r || !r[0] || !r[0].id) return;
             selectedId.value = r[0].id;
             quizes.value = r;
          } catch (e) {
             console.error('Error getting quizes', e);
          }
+         loading.value = false;
       });
       return {
          quizes,
@@ -82,6 +91,7 @@ export default {
          selectedOption,
          selectionExpanded,
          errorMsg,
+         loading,
       };
    },
 };
@@ -124,7 +134,7 @@ input {
    box-shadow: -1px 1px 3px 1px black;
 }
 .nameInput {
-   padding: 0;
+   padding: 0 0.75rem;
    width: 100%;
    border: 1px solid black;
    margin-bottom: 1rem;
@@ -140,6 +150,7 @@ input {
    flex-direction: column;
    width: 100%;
    margin-bottom: 1.2rem;
+   user-select: none;
 }
 .listContainer {
    position: relative;
@@ -164,7 +175,7 @@ input {
    border-bottom-right-radius: 10px;
    border-bottom-left-radius: 10px;
    opacity: 0;
-   transition: transform 0.25s;
+   transition: transform 0.15s;
 }
 .expanded .selectContainer {
    opacity: 1;
@@ -194,6 +205,19 @@ input {
 .selectedOption:hover {
    cursor: pointer;
 }
+@keyframes spin {
+   0% {
+      transform: rotate(0deg);
+   }
+   100% {
+      transform: rotate(360deg);
+   }
+}
+.loader {
+   aspect-ratio: 1;
+   height: 60%;
+   animation: spin 0.7s infinite linear;
+}
 .selectOption {
    font-size: 1.6rem;
    padding-bottom: 0.7rem;
@@ -212,14 +236,14 @@ input {
 }
 .startButton {
    width: max(30%, 140px);
-   border: 1px solid black;
-   background-color: transparent;
+   border: none;
+   background-color: blue;
+   color: white;
+   user-select: none;
    transition: background-color 0.25s, color 0.25s;
 }
 .startButton:hover {
    cursor: pointer;
-   background-color: blue;
-   color: white;
 }
 .startButton:active {
    background-color: rgb(0, 0, 160);
