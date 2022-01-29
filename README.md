@@ -4,9 +4,19 @@
 [Live demo](https://www.quiz.valdis.me/) is available
 
 ## Description
-A project made with [Vue.js](https://vuejs.org/) and [Express](https://expressjs.com/)
+A project made with [Vue.js](https://vuejs.org/) frontend and optional [Express](https://expressjs.com/) backend
 <br>
-Simple quiz webapp that fetches data from either a rest API or a local Express server
+This webapp fetches data about quizes, questions and checks answers using either a public REST API or calls to a locally running Express.js server
+<br>
+## Data flow breakdown
+The Homepage fetches all available quizes on load
+<br>
+The individual question page fetches the first question's info on load, and every subsequent question data when prompted by the user pressing the "Next" button
+<br>
+After the user presses the "Next" button on the last question the answers are submitted to be checked and upon receiving the results the user is redirected to the results page where he can view the amount of questions he got correct
+<br>
+## Validation
+There is frontend validation that requires the user to select a name before beginning a quiz and to select an answer before hitting the "Next" button on a question
 ## Project setup
 ### Install dependencies
 ```
